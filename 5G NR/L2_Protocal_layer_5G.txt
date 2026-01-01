@@ -1,0 +1,137 @@
+## **Layer 2 (L2) Protocols in 5G NR**
+
+![Image](https://techplayon.com/wp-content/uploads/2017/09/Control-Plane.png?utm_source=chatgpt.com)
+
+![Image](https://www.keysight.com/blogs/en/inds/2020/07/23/media_11ad6ec033986f6c4f89f888c15b97e0b07351299.png?format=png\&optimize=medium\&width=750\&utm_source=chatgpt.com)
+
+![Image](https://www.5gtechnologyworld.com/wp-content/uploads/2021/05/OpenRAN_Functional_Split_L-R.jpg?utm_source=chatgpt.com)
+
+In **5G NR**, **Layer 2 (L2)** sits between **PHY (Layer 1)** and **Layer 3 (RRC)** and is responsible for **reliable data transfer, scheduling, security, and QoS handling**.
+
+As standardized by **3GPP**, L2 consists of **three sub-layers**:
+
+---
+
+## 🔹 1. **MAC (Medium Access Control)**
+
+**Position:** Closest to PHY
+
+### Main responsibilities
+
+* **Scheduling** (UL/DL grants)
+* **Multiplexing / demultiplexing** of logical channels
+* **HARQ** management
+* **Priority handling**
+* **Buffer Status Reports (BSR)**
+* **Random Access (RACH)** procedures
+
+### Why MAC is critical
+
+* Controls **who transmits, when, and how much**
+* Directly impacts **latency and throughput**
+* Central to **5G L2 scheduler design**
+
+---
+
+## 🔹 2. **RLC (Radio Link Control)**
+
+### Modes of operation
+
+| Mode                    | Purpose                        |
+| ----------------------- | ------------------------------ |
+| **TM** (Transparent)    | Broadcast (e.g., paging)       |
+| **UM** (Unacknowledged) | Low latency (VoNR, streaming)  |
+| **AM** (Acknowledged)   | Reliable data (TCP, signaling) |
+
+### Responsibilities
+
+* **Segmentation & reassembly**
+* **Retransmission** (AM mode)
+* **In-order delivery**
+* **Duplicate detection**
+* **Error correction**
+
+---
+
+## 🔹 3. **PDCP (Packet Data Convergence Protocol)**
+
+### Responsibilities
+
+* **Header compression** (ROHC)
+* **Ciphering & integrity protection**
+* **Sequence numbering**
+* **Reordering**
+* **Duplicate packet detection**
+* **Support for mobility** (handover, CHO, DAPS)
+
+### PDCP is key for
+
+* **Security**
+* **Mobility robustness**
+* **User-plane & control-plane reliability**
+
+---
+
+## 🔁 Data flow (simplified)
+
+```
+Application
+   ↓
+PDCP  → Security, reordering
+   ↓
+RLC   → Segmentation, retransmission
+   ↓
+MAC   → Scheduling, HARQ
+   ↓
+PHY   → Transmission over air
+```
+
+---
+
+## 📡 Control Plane vs User Plane in L2
+
+| Plane             | L2 protocols     |
+| ----------------- | ---------------- |
+| **Control Plane** | PDCP + RLC + MAC |
+| **User Plane**    | PDCP + RLC + MAC |
+
+(Difference lies in **configuration**, not protocol presence)
+
+---
+
+## 🧠 Interview-ready one-liners
+
+* **MAC:** *Manages scheduling, HARQ, and radio resource allocation*
+* **RLC:** *Ensures reliable and ordered delivery*
+* **PDCP:** *Handles security, header compression, and mobility*
+
+---
+
+## 🧪 Real-world relevance (CU/DU)
+
+Since you work on **5G CU/L2**, typical implementations involve:
+
+* **PDCP in CU**
+* **RLC/MAC in DU** (in split architectures)
+* Tight coordination for **CHO, mobility, and latency**
+
+---
+
+## 🔍 Summary table
+
+| Sub-layer | Key focus               |
+| --------- | ----------------------- |
+| MAC       | Radio scheduling & HARQ |
+| RLC       | Reliability & ordering  |
+| PDCP      | Security & mobility     |
+
+---
+
+If you want next:
+
+* L2 **functional splits (Option 2, 7.x)**
+* L2 **call flow for handover / CHO**
+* Scheduler deep-dive (PF, RR, QoS-aware)
+* L2 debugging (Wireshark, logs, KPIs)
+
+Just tell me 👍
