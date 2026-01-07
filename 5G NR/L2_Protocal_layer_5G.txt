@@ -1,4 +1,5 @@
-## **Layer 2 (L2) Protocols in 5G NR**
+#
+# **Layer 2 (L2) Protocols in 5G NR**
 
 ![Image](https://techplayon.com/wp-content/uploads/2017/09/Control-Plane.png?utm_source=chatgpt.com)
 
@@ -135,3 +136,179 @@ If you want next:
 * L2 debugging (Wireshark, logs, KPIs)
 
 Just tell me 👍
+
+==================================================================================================
+Below is a **clean, interview-ready explanation** of **HARQ**, its **use-cases**,
+ and **HARQ timing alignment**—exactly how it works in **LTE / 5G NR (L1–L2 interaction)**.
+
+---
+
+## 🔁 What is HARQ?
+
+**HARQ (Hybrid Automatic Repeat reQuest)** is a **fast error-recovery mechanism** 
+used between **MAC (L2)** and **PHY (L1)**.
+
+It **combines**:
+
+* ❌ **Error detection** (CRC)
+* 🔁 **Retransmission**
+* 🧠 **Soft combining** (Chase / IR)
+
+👉 Instead of fully discarding failed packets, 
+the receiver **combines retransmissions** to improve decoding.
+
+---
+
+## 🎯 Why HARQ is Needed (Use-case)
+
+Wireless channels are:
+
+* Fading
+* Noisy
+* Interference-prone
+
+HARQ:
+
+* Improves **reliability**
+* Reduces **packet loss**
+* Keeps **latency low** (faster than RLC retransmission)
+
+---
+
+## 🧱 Where HARQ Lives (Protocol Stack)
+
+```
+RLC  → long-term reliability (slow)
+MAC  → HARQ (fast)
+PHY  → decoding & soft combining
+```
+
+👉 HARQ operates at **MAC layer**, but **executed by PHY**.
+
+---
+
+## 🔄 HARQ Working (Step-by-Step)
+
+![Image](https://www.sharetechnote.com/html/5G/image/5G_HARQ_HowItWorks_01.png)
+
+![Image](https://helpfiles.keysight.com/csg/n7624/Content/RT/harqlevmodlte.gif)
+
+![Image](https://www.mohamedeladawi.com/content/images/2025/08/image-5.png)
+
+1️⃣ gNB transmits data with **HARQ process ID**
+2️⃣ UE decodes and checks **CRC**
+3️⃣ UE sends:
+
+* **ACK** → success
+* **NACK** → failure
+  4️⃣ If NACK → gNB retransmits
+  5️⃣ UE **combines old + new data**
+  6️⃣ Repeat until success or max retries
+
+---
+
+## 🧠 Types of HARQ Combining
+
+| Type                            | Description                           |
+| ------------------------------- | ------------------------------------- |
+| **Chase Combining**             | Retransmit same bits                  |
+| **Incremental Redundancy (IR)** | Transmit new parity bits (5G default) |
+
+---
+
+## ⏱️ What is HARQ Timing Alignment?
+
+**HARQ timing alignment** means:
+
+> **ACK/NACK and retransmissions must happen at fixed, predefined time intervals**
+
+So both **UE and gNB know exactly when** to:
+
+* Send feedback
+* Expect retransmission
+* Free HARQ buffers
+
+---
+
+## ⏰ HARQ Timing Example
+
+### LTE (Fixed)
+
+* Data sent in **subframe n**
+* ACK/NACK in **n + 4**
+* Retransmission in **n + 8**
+
+👉 Predictable & rigid
+
+---
+
+### 5G NR (Flexible)
+
+![Image](https://www.mohamedeladawi.com/content/images/size/w1200/2025/08/5G-UL-HARQ-Timing.png)
+
+![Image](https://media.licdn.com/dms/image/v2/C5612AQGsWkTniE-57A/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1589049040672?e=2147483647\&t=h-p7wK_VRHD_Ks8mksJPnr2HfkLRdwELKbge46xkOtU\&v=beta)
+
+* Timing defined by:
+
+  * **k1** → ACK/NACK timing
+  * **k2** → UL scheduling timing
+* Depends on:
+
+  * Numerology
+  * TDD pattern
+  * Slot duration
+
+👉 Much more flexible than LTE
+
+---
+
+## 🧮 Why HARQ Timing Alignment is Critical
+
+If timing is **misaligned**:
+
+* ACK/NACK arrives too early/late
+* Retransmission sent in wrong slot
+* HARQ process buffers mismatch
+* Leads to **throughput drop or call drop**
+
+---
+
+## 🔢 HARQ Processes
+
+| Technology | HARQ processes |
+| ---------- | -------------- |
+| LTE        | 8 (DL), 8 (UL) |
+| 5G NR      | Up to 16       |
+
+👉 Multiple processes allow **parallel transmissions**
+
+---
+
+## 🎯 Interview-Ready One-Liners
+
+* **HARQ** is a fast L2 error recovery mechanism combining retransmission and soft combining
+* **HARQ timing alignment** ensures ACK/NACK and retransmissions occur at known time offsets
+* **5G NR HARQ** uses flexible timing via **k1/k2** parameters
+* **HARQ improves reliability with low latency compared to RLC**
+
+---
+
+## 🧩 Simple Analogy
+
+📦 Courier delivery:
+
+* ACK → “Delivered”
+* NACK → “Resend”
+* HARQ buffer → “Saved package pieces combined later”
+
+---
+
+If you want next:
+
+* DL vs UL HARQ difference
+* HARQ vs ARQ vs RLC
+* k1/k2 explained with real slot numbers
+* HARQ interview traps & common mistakes
+
+Just say 👍
+

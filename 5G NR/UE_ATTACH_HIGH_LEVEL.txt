@@ -1,0 +1,224 @@
+Below is a **crystal-clear, end-to-end explanation of UE Attach (5G NR Registration)**, structured exactly the way **interviewers expect**, with **call flow, purpose of each step, messages, and failure cases**.
+
+---
+
+# 📡 UE Attach in 5G NR (Interview-Ready Explanation)
+
+> In **5G**, UE Attach is called **Registration Procedure** (as per 5G Core).
+> It allows the UE to **register with the network**, get **authentication**, **security**, and **IP connectivity**.
+
+---
+
+## 🔷 High-Level Entities Involved
+
+![Image](https://techplayon.com/wp-content/uploads/2020/04/5G-Call-Flow.png)
+
+![Image](https://i0.wp.com/techlteworld.com/wp-content/uploads/2024/07/image-7.png?resize=800%2C928\&ssl=1)
+
+![Image](https://www.grandmetric.com/wp-content/webp-express/webp-images/uploads/2018/03/Screenshot_1-1024x477.jpg.webp)
+
+* **UE** – User Equipment
+* **gNB** – 5G base station
+* **AMF** – Access & Mobility Management Function
+* **SMF** – Session Management Function
+* **UPF** – User Plane Function
+* **AUSF / UDM** – Authentication & subscription data
+
+(Defined by **3GPP**)
+
+---
+
+## 🔶 UE Attach = 3 Major Phases
+
+1. **Initial Access (RACH)**
+2. **Registration + Authentication**
+3. **PDU Session Establishment (IP allocation)**
+
+---
+
+# 1️⃣ Initial Access (RACH Phase)
+
+![Image](https://www.researchgate.net/publication/377354641/figure/fig7/AS%3A11431281217246837%401705067762207/Random-Access-Procedure-in-5G-NR-19.ppm)
+
+![Image](https://www.sharetechnote.com/html/5G/image/5G_RACH_OverView_01.png)
+
+### 🔹 Why needed?
+
+UE has **no uplink timing** → must synchronize with gNB.
+
+### 🔹 Steps
+
+* UE sends **RACH Preamble**
+* gNB responds with **RAR**
+
+  * Timing Advance
+  * Temporary identity (TC-RNTI)
+  * UL Grant
+
+📌 After this, UE is **UL synchronized**
+
+---
+
+# 2️⃣ RRC Connection Establishment
+
+![Image](https://media.licdn.com/dms/image/v2/C4D12AQHp9eh7RIBOvg/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1644059958999?e=2147483647\&t=SzITkvZx6kMvY1RwLrW8u2s-FHAhuJnLBzmVUFPGA-g\&v=beta)
+
+![Image](https://www.sharetechnote.com/html/5G/image/NR_RRCReconfiguration_01.png)
+
+### 🔹 Messages
+
+1. **RRC Setup Request**
+   (Cause: `mo-Signalling`)
+2. **RRC Setup**
+3. **RRC Setup Complete**
+
+   * Contains **NAS Registration Request**
+
+📌 UE now moves to **RRC_CONNECTED**
+
+---
+
+# 3️⃣ NAS Registration (Core Network Attach)
+
+![Image](https://techplayon.com/wp-content/uploads/2020/04/5G-Call-Flow.png)
+
+![Image](https://techplayon.com/wp-content/uploads/2021/03/AuthenticationCallflow.png)
+
+### 🔹 Registration Request (UE → AMF)
+
+Includes:
+
+* SUPI / SUCI
+* Requested NSSAI (network slice)
+* UE security capability
+
+---
+
+## 🔐 Authentication & Security
+
+### 🔹 Authentication
+
+* AMF → AUSF → UDM
+* Challenge–Response (AKA)
+* UE proves legitimacy
+
+### 🔹 Security Mode Command
+
+* Ciphering & integrity algorithms selected
+* UE confirms → **Security activated**
+
+📌 After this:
+
+* NAS is encrypted
+* UE is trusted
+
+---
+
+## 🆔 Registration Accept
+
+AMF sends:
+
+* **5G-GUTI** (temporary ID)
+* Mobility parameters
+* Allowed NSSAI
+
+UE replies:
+
+* **Registration Complete**
+
+📌 UE is now **REGISTERED**
+
+---
+
+# 4️⃣ PDU Session Establishment (Data Connectivity)
+
+![Image](https://www.telecomhall.net/uploads/db2683/original/3X/c/6/c635510816f2774cd90fa35be3d3130f6d491731.jpeg)
+
+![Image](https://www.researchgate.net/publication/356745284/figure/fig1/AS%3A1098700118077445%401638961929381/Simplified-5G-System-architecture-Highlighted-the-SMF-and-UPF-components-are-addressed.ppm)
+
+### 🔹 Why needed?
+
+Attach ≠ Internet
+We need **PDU Session** for IP/data.
+
+---
+
+### 🔹 Steps
+
+1. UE → **PDU Session Establishment Request**
+2. AMF → SMF
+3. SMF:
+
+   * Selects UPF
+   * Allocates IP address
+4. gNB configures **DRBs**
+5. UE receives **PDU Session Accept**
+
+📌 UE now has:
+
+* IP address
+* Active data path
+* QoS flows
+
+---
+
+# 🔁 Complete UE Attach Flow (One View)
+
+```
+UE → gNB : RACH
+UE → gNB : RRC Setup Request
+UE → gNB : RRC Setup Complete (NAS Reg Req)
+gNB → AMF: Registration Request
+AMF ↔ AUSF/UDM: Authentication
+AMF → UE : Security Mode
+AMF → UE : Registration Accept
+UE → AMF : Registration Complete
+UE → AMF : PDU Session Request
+UE ← AMF : PDU Session Accept
+```
+
+---
+
+# ❌ Attach Failure Scenarios (Interview Gold)
+
+| Failure                | Reason               |
+| ---------------------- | -------------------- |
+| Authentication failure | SIM invalid          |
+| RACH failure           | Poor radio           |
+| Registration reject    | Slice not allowed    |
+| PDU reject             | No IP / policy issue |
+
+---
+
+# 🔶 UE States After Attach
+
+| Layer | State              |
+| ----- | ------------------ |
+| RRC   | CONNECTED          |
+| NAS   | REGISTERED         |
+| Data  | PDU Session ACTIVE |
+
+---
+
+# 🧠 Interview One-Liner (Must Memorize)
+
+> UE Attach in 5G, called Registration, includes initial RACH access, RRC connection establishment, NAS authentication and security setup, followed by PDU session establishment to enable IP data connectivity.
+
+---
+
+# 🔥 Frequently Asked Follow-Ups
+
+* Difference between **LTE Attach vs 5G Registration**
+* What happens if **PDU session fails**
+* Role of **AMF vs SMF**
+* Where **QoS** is enforced
+* SRB vs DRB during attach
+
+If you want next, I can explain:
+
+* **Attach vs Service Request**
+* **Attach with call flow diagram (step-by-step)**
+* **Attach logs (real gNB/UE perspective)**
+* **Attach optimization & KPIs**
+
+Just tell me 👍

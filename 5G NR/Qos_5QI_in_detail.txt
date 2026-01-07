@@ -1,0 +1,177 @@
+Below is a **clear, standards-aligned explanation** of **QoS, 5QI, 5QI mapping, and priority order in 5G**, exactly how it’s used in **real networks and interviews**.
+
+---
+
+## 📶 What is QoS (Quality of Service)?
+
+**QoS** defines **how well a packet flow must be treated by the network** so that the application works correctly.
+
+It controls:
+
+* ⏱️ **Latency**
+* 📉 **Packet loss**
+* 📶 **Reliability**
+* 🚦 **Priority vs other traffic**
+
+Examples:
+
+* Voice call → **low latency, high priority**
+* Video streaming → **high throughput**
+* File download → **best effort**
+
+---
+
+## 🧩 QoS in 5G (Big Picture)
+
+![Image](https://media.licdn.com/dms/image/v2/D5622AQF4QhmspRZQEw/feedshare-shrink_800/B56ZnxsvOkJoAg-/0/1760696661482?e=2147483647\&t=_4K3f8o3kwD4yIDhL0Br58A4OARA5zkT3xj4N3brY24\&v=beta)
+
+![Image](https://www.techplayon.com/wp-content/uploads/2020/09/Flow-Mapping.jpg)
+
+![Image](https://www.sharetechnote.com/html/5G/image/NR_QoS_Structure_02.png)
+
+In 5G, QoS is applied per **QoS Flow**, not just per bearer.
+
+```
+Application
+ → QoS Flow (QFI, 5QI)
+ → DRB
+ → MAC Scheduler
+ → Air Interface
+```
+
+Defined by **3GPP** specifications.
+
+---
+
+## 🔢 What is 5QI (5G QoS Identifier)?
+
+**5QI** is a **standardized index** that tells the network **how to treat packets**.
+
+Each **5QI value** defines:
+
+* Priority
+* Packet Delay Budget (PDB)
+* Packet Error Rate (PER)
+
+👉 **5QI replaces LTE’s QCI**
+
+---
+
+## 🧱 Key QoS Terms (Must Know)
+
+| Term         | Meaning                             |
+| ------------ | ----------------------------------- |
+| **QoS Flow** | Logical flow with same QoS          |
+| **QFI**      | QoS Flow Identifier (packet marker) |
+| **5QI**      | QoS behavior definition             |
+| **DRB**      | Data Radio Bearer                   |
+| **ARP**      | Admission & Retention Priority      |
+
+---
+
+## 🔁 What is 5QI Mapping?
+
+**5QI mapping** is the process of translating **core-network QoS requirements** into **radio-level behavior**.
+
+### Mapping Path
+
+```
+Application
+ → QoS Flow (5QI, QFI)
+ → SDAP maps QoS Flow → DRB
+ → MAC scheduler applies priority
+```
+
+👉 Multiple QoS flows **can map to one DRB** (but with same QoS behavior).
+
+---
+
+## 🧠 Standardized vs Non-Standardized 5QI
+
+### ✅ Standardized 5QI
+
+* Predefined by 3GPP
+* Known priority, latency, loss values
+
+Examples:
+
+* **5QI = 1** → Voice (URLLC-like)
+* **5QI = 9** → Best effort data
+
+### 🛠️ Non-Standardized 5QI
+
+* Operator-defined
+* Used for enterprise / private networks
+
+---
+
+## 🥇 5QI Priority Order (Most Important)
+
+⚠️ **Lower priority value = higher priority**
+
+| Priority   | 5QI | Typical Use                  |
+| ---------- | --- | ---------------------------- |
+| 🔥 Highest | 1   | Voice (VoNR)                 |
+|            | 2   | Conversational video         |
+|            | 3–4 | Real-time gaming             |
+|            | 5   | IMS signaling                |
+|            | 6–7 | Live video                   |
+|            | 8   | Buffered video               |
+| 🐢 Lowest  | 9   | Best effort (web, downloads) |
+
+👉 **5QI = 1 is more important than 5QI = 9**
+
+---
+
+## ⏱️ Latency & Reliability Examples
+
+| 5QI | PDB (Latency) | PER  |
+| --- | ------------- | ---- |
+| 1   | 100 ms        | 10⁻² |
+| 2   | 150 ms        | 10⁻³ |
+| 9   | 300 ms        | 10⁻⁶ |
+
+---
+
+## ⚙️ How MAC Uses 5QI (Real Scheduling)
+
+MAC scheduler considers:
+
+1. **5QI priority**
+2. **Buffer status**
+3. **Channel quality (CQI)**
+4. **HARQ state**
+
+Example:
+
+> Voice (5QI=1) will be scheduled **before** video (5QI=8) even if video has more data.
+
+---
+
+## 🎯 Interview One-Liners (Gold)
+
+* **QoS** ensures different applications get appropriate latency and reliability
+* **5QI** defines standardized QoS behavior in 5G
+* **Lower 5QI value means higher priority**
+* **SDAP maps QoS flows to DRBs; MAC enforces priority on air interface**
+
+---
+
+## 🧩 Simple Analogy
+
+🚦 **Traffic signal**
+
+* Ambulance → 5QI 1 (highest priority)
+* Bus → 5QI 6
+* Bike → 5QI 9 (best effort)
+
+---
+
+If you want next:
+
+* ARP vs 5QI difference
+* End-to-end QoS flow (Core → gNB → UE)
+* How QoS impacts throughput & latency
+* QoS interview traps & tricky questions
+
+Just say 👍

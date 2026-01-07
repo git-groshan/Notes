@@ -1,0 +1,313 @@
+In **5G NR (and LTE)**, **RACH (Random Access Channel)** is used by a UE to establish or re-establish uplink timing and connection with the gNB.
+There are **two RACH procedures** based on how the preamble is assigned:
+
+---
+
+## 1️⃣ Contention-Based RACH (CBRA)
+
+![Image](https://www.sharetechnote.com/html/5G/image/5G_RACH_OverView_01.png)
+
+![Image](https://techplayon.com/wp-content/uploads/2020/08/CBRA.jpg)
+
+![Image](https://www.researchgate.net/publication/283346120/figure/fig1/AS%3A391444478087168%401470339044108/Random-Access-Channel-RACH-Procedure-of-LTE-Contention-Based.png)
+
+### 🔹 What it is
+
+* **UE randomly selects a preamble** from a common pool.
+* Multiple UEs **may choose the same preamble**, causing **contention**.
+* gNB resolves contention using UE identity.
+
+### 🔹 When it is used
+
+* **Initial access** (UE power-on)
+* **RRC_IDLE → RRC_CONNECTED**
+* **After radio link failure**
+* **Cell reselection**
+* **UL synchronization loss**
+
+### 🔹 4-Step CBRA Procedure
+
+| Step     | Message                      | Direction | Purpose                   |
+| -------- | ---------------------------- | --------- | ------------------------- |
+| **Msg1** | RACH Preamble                | UE → gNB  | Request access            |
+| **Msg2** | Random Access Response (RAR) | gNB → UE  | Timing advance + UL grant |
+| **Msg3** | RRC Request / UL data        | UE → gNB  | UE identity               |
+| **Msg4** | Contention Resolution        | gNB → UE  | Confirms winning UE       |
+
+👉 If **two UEs send the same Msg1**, both may receive Msg2,
+but only **one UE wins Msg4**.
+
+### 🔹 Key Characteristics
+
+* ❌ Contention possible
+* ❌ Higher latency
+* ✅ Flexible
+* ✅ Used most frequently
+
+---
+
+## 2️⃣ Contention-Free RACH (CFRA)
+
+![Image](https://www.sharetechnote.com/html/5G/image/5G_RACH_OverView_01.png)
+
+![Image](https://techplayon.com/wp-content/uploads/2020/08/CFRA.jpg)
+
+### 🔹 What it is
+
+* **Dedicated preamble** assigned to a UE by the gNB.
+* **No contention**, since the preamble is UE-specific.
+* Faster and more reliable.
+
+### 🔹 When it is used
+
+* **Handover**
+* **Beam failure recovery**
+* **Dual connectivity**
+* **Configured UL synchronization**
+
+### 🔹 2-Step CFRA Procedure
+
+| Step     | Message            | Direction | Purpose                   |
+| -------- | ------------------ | --------- | ------------------------- |
+| **Msg1** | Dedicated Preamble | UE → gNB  | Access request            |
+| **Msg2** | RAR                | gNB → UE  | Timing advance + UL grant |
+
+👉 **Msg3 & Msg4 are NOT required**
+
+### 🔹 Key Characteristics
+
+* ✅ No contention
+* ✅ Low latency
+* ❌ Needs prior configuration
+* ❌ Not suitable for initial access
+
+---
+
+## 🔁 CBRA vs CFRA (Quick Comparison)
+
+| Feature        | Contention-Based | Contention-Free |
+| -------------- | ---------------- | --------------- |
+| Preamble       | Shared           | Dedicated       |
+| Contention     | Yes              | No              |
+| Steps          | 4                | 2               |
+| Latency        | Higher           | Lower           |
+| Initial Access | ✅ Yes            | ❌ No            |
+| Handover       | ❌ Rare           | ✅ Yes           |
+
+---
+
+## 🧠 Interview One-Liner
+
+> **Contention-based RACH** is used for initial access where UE randomly selects a preamble, while **contention-free RACH** is used in handover or beam recovery where the gNB assigns a dedicated preamble to avoid collisions.
+
+---
+
+If you want, I can also explain:
+
+* **2-step RACH (Rel-16)**
+* **Beam-based RACH in mmWave**
+* **RACH parameters (preamble formats, power ramping, backoff)**
+  Just tell me 👍
+
+
+Below is a **clear, interview-ready explanation** of **2-Step RACH (Rel-16)** and **important RACH parameters**, with flow, purpose, and tuning aspects.
+
+---
+
+# 🔷 2-Step RACH (Release-16)
+
+![Image](https://techplayon.com/wp-content/uploads/2021/04/4-2step.png)
+
+![Image](https://media.licdn.com/dms/image/v2/D4D12AQGM-nvESm4_CA/article-cover_image-shrink_600_2000/article-cover_image-shrink_600_2000/0/1688820647387?e=2147483647\&t=KNmSpdlcQO0fgUxAziZcAGC4RP07VJyYPL2vHUuOPKM\&v=beta)
+
+![Image](https://tech-academy.amarisoft.com/images/NR_SA_2Step_RACH_Overview_01.webp)
+
+## 🔹 Why 2-Step RACH was introduced
+
+Traditional **4-step RACH** causes:
+
+* Higher **latency**
+* More signaling overhead
+* Inefficiency for **small data / URLLC / IoT**
+
+👉 **2-Step RACH reduces access delay by ~50%**.
+
+---
+
+## 🔹 How 2-Step RACH works
+
+### 🔸 Step-1: **MsgA**
+
+UE sends **both**:
+
+* **Preamble**
+* **Small data payload** (UE identity / RRC request)
+
+📤 UE → gNB
+
+---
+
+### 🔸 Step-2: **MsgB**
+
+gNB responds with:
+
+* Timing Advance
+* UL grant
+* Contention resolution (if needed)
+* RRC response
+
+📥 gNB → UE
+
+---
+
+## 🔁 Comparison: 4-Step vs 2-Step RACH
+
+| Aspect            | 4-Step RACH    | 2-Step RACH                 |
+| ----------------- | -------------- | --------------------------- |
+| Messages          | Msg1–Msg4      | MsgA + MsgB                 |
+| Latency           | High           | **Low**                     |
+| UL data in access | ❌ No           | ✅ Yes                       |
+| Best for          | General access | **URLLC, mMTC, small data** |
+| Complexity        | Lower          | Higher (receiver side)      |
+
+---
+
+## 🔹 Contention Handling in 2-Step RACH
+
+* **Still contention-based**
+* If multiple UEs choose same preamble + payload:
+
+  * gNB resolves using UE identity
+  * Losers retry with backoff
+
+---
+
+## 🔹 When 2-Step RACH is used
+
+* Small UL data transmission
+* URLLC traffic
+* Beam failure recovery
+* Massive IoT
+* Latency-critical services
+
+---
+
+# 🔶 Important RACH Parameters (Very Important for Interview)
+
+![Image](https://www.sharetechnote.com/html/5G/image/5G_RACH_OverView_01.png)
+
+![Image](https://www.rfwireless-world.com/_astro/5G-NR-PRACH-Formats.C9jEqCv6.jpg)
+
+![Image](https://www.sharetechnote.com/html/5G/image/NR_RACH_PreambleFormat_B1.png)
+
+---
+
+## 1️⃣ PRACH Configuration Index
+
+* Defines **time + frequency resources** for RACH
+* Determines:
+
+  * Subframe
+  * Slot
+  * Symbol
+* Different configs for **FR1 / FR2**
+
+👉 Controls **how often** UE can transmit RACH
+
+---
+
+## 2️⃣ Preamble Format
+
+Determines **coverage & latency**
+
+| Format | Use Case                |
+| ------ | ----------------------- |
+| Long   | Large cell, rural       |
+| Short  | Small cell, dense urban |
+
+* Long preamble → better coverage
+* Short preamble → lower latency
+
+---
+
+## 3️⃣ Number of RACH Preambles
+
+* Typically **64 preambles**
+* Split into:
+
+  * Contention-based
+  * Contention-free
+
+Example:
+
+```
+CB = 48
+CF = 16
+```
+
+---
+
+## 4️⃣ Power Ramping Parameters
+
+Used if no RAR is received.
+
+* **PowerRampingStep**
+  → Increase in transmit power per retry
+
+* **PreambleInitialReceivedTargetPower**
+  → Target power at gNB
+
+👉 Prevents continuous collision & improves detection
+
+---
+
+## 5️⃣ Preamble TransMax
+
+* Maximum number of RACH attempts
+* Typical value: **10–20**
+
+If exceeded → RACH failure → upper layer notified
+
+---
+
+## 6️⃣ Backoff Indicator (BI)
+
+* Sent by gNB in RAR
+* UE waits randomly before retry
+
+👉 Reduces congestion during heavy load
+
+---
+
+## 7️⃣ Zero Correlation Zone (ZCZ)
+
+* Prevents **false detection** of preambles
+* Larger ZCZ → better interference tolerance
+* Smaller ZCZ → supports more UEs
+
+---
+
+## 8️⃣ Msg3 / MsgA Payload Size
+
+* Defines how much UL data can be sent
+* Very important for:
+
+  * 2-Step RACH
+  * Small data transmission
+
+---
+
+## 🧠 Interview-Ready Summary (Must Remember)
+
+> **2-Step RACH combines preamble and UL data in MsgA and completes access using MsgB, significantly reducing latency compared to 4-step RACH. RACH parameters like preamble format, power ramping, PRACH config index, and backoff control coverage, collision probability, and access delay.**
+
+---
+
+If you want next, I can explain:
+
+* **Beam-based RACH in FR2**
+* **RACH failure handling**
+* **RACH KPI tuning from gNB perspective**
+* **RACH call flow with timers (RA-ResponseWindow, contention timer)**
+
+Just tell me 👍

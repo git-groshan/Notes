@@ -1,0 +1,409 @@
+A **radio frame** is a **basic time unit** used in **wireless/mobile communication systems** (like **4G LTE and 5G NR**)
+to organize how data is transmitted over the air.
+
+Think of it as a **fixed-duration time container** that holds smaller pieces of data.
+
+---
+
+## 📡 What is a Radio Frame?
+
+A **radio frame** is a **time-structured block** that defines **when and how signals are sent** 
+between a mobile device (UE) and the base station (gNB/eNB).
+
+### ⏱️ Duration
+
+* **LTE:** 10 ms
+* **5G NR:** 10 ms (same as LTE)
+
+---
+
+## 🧱 Radio Frame Structure (5G / LTE)
+
+![Image](https://www.gaussianwaves.com/gaussianwaves/wp-content/uploads/2022/02/5G-NR-radio-frame-structure-updated-2.png)
+
+![Image](https://techplayon.com/wp-content/uploads/2018/04/LTE-Frame-1.png)
+
+![Image](https://techplayon.com/wp-content/uploads/2018/06/5G-Frame-3-Slots.png)
+
+### Hierarchy (from large to small):
+
+1. **Radio Frame** – 10 ms
+2. **Subframes** – 10 subframes (each 1 ms)
+3. **Slots** – depends on numerology
+4. **OFDM Symbols** – smallest time unit
+
+---
+
+## 🔢 LTE Example
+
+* **1 Radio Frame** = 10 ms
+* **10 Subframes** = 1 ms each
+* **Each subframe** = 2 slots (0.5 ms each)
+
+---
+
+## ⚡ 5G NR Example (Numerology-based)
+
+5G introduces **numerology (μ)**, which changes slot duration:
+
+| Numerology (μ) | Subcarrier Spacing | Slot Duration |
+| -------------- | ------------------ | ------------- |
+| μ = 0          | 15 kHz             | 1 ms          |
+| μ = 1          | 30 kHz             | 0.5 ms        |
+| μ = 2          | 60 kHz             | 0.25 ms       |
+
+➡️ **Higher μ → smaller slots → lower latency**
+
+---
+
+## 🎯 Why Radio Frame is Important
+
+* 📅 **Synchronization** between UE and network
+* 📦 **Scheduling** of uplink & downlink data
+* 🔄 **HARQ timing**
+* 🚀 **Latency control** (especially in 5G URLLC)
+* 📊 **Resource allocation** in MAC layer
+
+---
+
+## 🧠 Simple Analogy
+
+📦 **Radio Frame** = One page of a diary (10 ms)
+🧾 **Subframe** = One paragraph
+🧩 **Slot** = One sentence
+🔤 **OFDM Symbol** = One word
+
+---
+
+If you want, I can explain:
+
+* Radio frame vs slot vs symbol
+* Frame structure type (FDD / TDD)
+* How MAC schedules data inside a radio frame
+* Interview-oriented explanation (L2/MAC focused)
+
+Just tell me 👍
+
+======================================================================================================================
+Below is a **clear, layered explanation** from **largest → smallest time unit**,
+exactly how it’s used in **LTE / 5G NR** (useful for interviews and real MAC-layer understanding).
+
+---
+
+## 1️⃣ Radio Frame
+
+![Image](https://www.gaussianwaves.com/gaussianwaves/wp-content/uploads/2022/02/5G-NR-radio-frame-structure-updated-2.png)
+
+![Image](https://www.researchgate.net/publication/319889045/figure/fig5/AS%3A631648949374999%401527608253770/The-frame-structure-A-10-ms-radio-frame-is-divided-into-10-subframes-with-the-same.png)
+
+### 📦 What it is
+
+A **radio frame** is the **largest fixed time unit** used to organize over-the-air transmission.
+
+### ⏱️ Duration
+
+* **LTE:** 10 ms
+* **5G NR:** 10 ms
+
+### 🧠 Purpose
+
+* Network timing reference
+* Scheduling boundary
+* HARQ timing alignment
+* System frame number (SFN) increments per frame
+
+👉 **1 radio frame = 10 subframes**
+
+---
+
+## 2️⃣ Subframe
+
+![Image](https://www.sharetechnote.com/image/FDD_DL_FrameStructure_Symbols.PNG)
+
+![Image](https://www.sharetechnote.com/html/5G/image/NR_Numerology_FrameStructure_u_2__NormalCP_38_211_01.png)
+
+### 📦 What it is
+
+A **subframe** is a **1 ms time interval** inside a radio frame.
+
+### ⏱️ Duration
+
+* **Always 1 ms** (LTE + 5G)
+
+### 🧠 Purpose
+
+* Minimum scheduling unit in **LTE**
+* Carries control + data channels (PDCCH, PDSCH, etc.)
+
+👉 **1 radio frame = 10 subframes**
+
+---
+
+## 3️⃣ Slot
+
+![Image](https://www.sharetechnote.com/html/5G/image/NR_Numerology_FrameStructure_u_2__ExtendedCP_38_211_v_2_0_0_01.png)
+
+![Image](https://techplayon.com/wp-content/uploads/2018/04/LTE-Frame-1.png)
+
+### 📦 What it is
+
+A **slot** is a **sub-division of a subframe**.
+Its duration **depends on numerology (μ)** in 5G.
+
+### ⏱️ Duration
+
+| Technology          | Slot duration |
+| ------------------- | ------------- |
+| **LTE**             | 0.5 ms        |
+| **5G μ=0 (15 kHz)** | 1 ms          |
+| **5G μ=1 (30 kHz)** | 0.5 ms        |
+| **5G μ=2 (60 kHz)** | 0.25 ms       |
+
+### 🧠 Purpose
+
+* **Basic scheduling unit in 5G NR**
+* Enables low latency (mini-slots possible)
+
+👉 **1 subframe = multiple slots (5G)**
+
+---
+
+## 4️⃣ OFDM Symbol
+
+![Image](https://blog.minicircuits.com/wp-content/uploads/2024/02/OFDM_Signal_-_Freq-Time_Representation_12-11-23_email_hero_2.gif)
+
+![Image](https://www.sharetechnote.com/html/5G/image/NR_Numerology_FrameStructure_u_2__ExtendedCP_38_211_v_2_0_0_01.png)
+
+### 📦 What it is
+
+An **OFDM symbol** is the **smallest time unit** in the physical layer.
+
+### ⏱️ Duration
+
+Depends on **subcarrier spacing**:
+
+* 15 kHz → ~66.7 μs
+* 30 kHz → ~33.3 μs
+* 60 kHz → ~16.7 μs
+
+### 🧠 Purpose
+
+* Actual modulation happens here
+* Carries bits mapped to subcarriers
+* Supports flexible scheduling & beamforming
+
+👉 **1 slot = usually 14 OFDM symbols**
+
+---
+
+## 🧱 Complete Hierarchy (Big → Small)
+
+```
+Radio Frame (10 ms)
+ └── Subframe (1 ms)
+      └── Slot
+           └── OFDM Symbol
+```
+
+---
+
+## 🔍 Key Interview Differences (Quick Table)
+
+| Term            | Duration | Used for              |
+| --------------- | -------- | --------------------- |
+| **Radio Frame** | 10 ms    | System timing & SFN   |
+| **Subframe**    | 1 ms     | LTE scheduling        |
+| **Slot**        | Variable | 5G scheduling         |
+| **OFDM Symbol** | μs level | Physical transmission |
+
+---
+
+## 🎯 One-Line Definitions (Interview-Ready)
+
+* **Radio Frame:** 10 ms time container for all transmissions
+* **Subframe:** 1 ms unit inside a radio frame
+* **Slot:** Scheduling unit inside subframe (numerology-dependent)
+* **OFDM Symbol:** Smallest time unit where data is modulated
+
+---
+
+## 🧠 Simple Analogy
+
+📘 **Book** → Radio Frame
+📄 **Page** → Subframe
+🧾 **Line** → Slot
+🔤 **Letter** → OFDM Symbol
+
+---
+
+If you want next:
+
+* Mini-slot vs slot
+* Time-frequency grid explanation
+* MAC scheduling mapped to frame/slot
+* Very short **one-page interview notes**
+
+Just say 👍
+=============================================================================================
+##############   Time-frequency grid explanation  #############################
+## 📊 Time–Frequency Grid (5G NR / LTE) — **Crystal-clear explanation**
+
+![Image](https://www.researchgate.net/publication/344690032/figure/fig1/AS%3A966507894931457%401607444847927/G-NR-frame-structure-and-resource-grid-basic-terminology.png)
+
+![Image](https://helpfiles.keysight.com/csg/89600B/Webhelp/Subsystems/lte/content/resources/image/lte_frame.png)
+
+![Image](https://www.sharetechnote.com/html/5G/image/NR_Resource_Grid_01.png)
+
+The **time–frequency grid** is a **2D map** that shows **where (frequency)** and **when (time)** data is transmitted over the air.
+
+---
+
+## 🧱 What is the Time–Frequency Grid?
+
+It is a **matrix of small boxes**:
+
+* **X-axis → Time**
+* **Y-axis → Frequency**
+
+Each small box is a **Resource Element (RE)** — the **smallest allocatable unit**.
+
+---
+
+## 🧭 Axes Explained
+
+### ⏱️ Time axis (horizontal)
+
+```
+OFDM Symbol → Slot → Subframe → Radio Frame
+```
+
+* Smallest unit: **OFDM symbol**
+* Scheduling unit (5G): **Slot**
+* Fixed reference: **Subframe (1 ms)**, **Frame (10 ms)**
+
+---
+
+### 📶 Frequency axis (vertical)
+
+```
+Subcarrier → Resource Block (RB) → Bandwidth Part (BWP)
+```
+
+* **Subcarrier**: one narrow frequency tone
+* **Resource Block (RB)**: 12 subcarriers
+* **BWP (5G)**: group of RBs used for scheduling
+
+---
+
+## 🔹 Smallest Units
+
+### 1️⃣ Resource Element (RE)
+
+* **1 subcarrier × 1 OFDM symbol**
+* Carries:
+
+  * Data
+  * Control
+  * Reference signals (DMRS, PTRS)
+
+👉 **RE = one box in the grid**
+
+---
+
+### 2️⃣ Resource Block (RB)
+
+* **12 subcarriers × 1 slot (time)**
+* **RB size in frequency**:
+
+  * 15 kHz × 12 = **180 kHz**
+* **RB size in time**:
+
+  * 1 slot (depends on numerology)
+
+👉 **RB = scheduling unit at PHY**
+
+---
+
+## 🔢 Example (5G NR, μ = 1)
+
+* Subcarrier spacing = **30 kHz**
+* Slot duration = **0.5 ms**
+* OFDM symbols per slot = **14**
+
+**One RB contains:**
+
+```
+12 subcarriers × 14 symbols = 168 REs
+```
+
+---
+
+## 📦 What goes inside the Grid?
+
+![Image](https://it.mathworks.com/help/examples/5g/win64/NewRadioPDSCHReferenceSignalsExample_04.png)
+
+![Image](https://www.mathworks.com/help/examples/5g/win64/NewRadioPDSCHReferenceSignalsExample_04.png)
+
+| Grid Content | Purpose            |
+| ------------ | ------------------ |
+| **PDSCH**    | Downlink user data |
+| **PUSCH**    | Uplink user data   |
+| **PDCCH**    | Scheduling control |
+| **DMRS**     | Channel estimation |
+| **SSB**      | Cell search & sync |
+
+---
+
+## 🧠 How MAC Uses the Grid
+
+1. **MAC scheduler** decides:
+
+   * UE
+   * RBs
+   * Slots
+   * MCS
+2. Scheduler sends grant via **PDCCH**
+3. UE transmits/receives data on allocated **RBs**
+4. PHY maps bits → symbols → grid REs
+
+---
+
+## ⚡ LTE vs 5G Grid (Key Difference)
+
+| Feature         | LTE             | 5G NR                 |
+| --------------- | --------------- | --------------------- |
+| Scheduling unit | Subframe (1 ms) | Slot / Mini-slot      |
+| Numerology      | Fixed (15 kHz)  | Flexible (15–120 kHz) |
+| BWP             | ❌               | ✅                     |
+| Mini-slot       | ❌               | ✅                     |
+
+---
+
+## 🎯 Interview One-Liners
+
+* **Time–frequency grid** is a 2D representation of radio resources in time and frequency
+* **RE** is the smallest unit (1 subcarrier × 1 symbol)
+* **RB** is the basic allocation unit (12 subcarriers × 1 slot)
+* **MAC schedules RBs, PHY maps them to REs**
+
+---
+
+## 🧩 Ultra-Simple Analogy
+
+🧩 **Chessboard**
+
+* Square → RE
+* Column → Time
+* Row → Frequency
+* Block → RB
+
+---
+
+If you want next:
+
+* Mini-slot vs slot (URLLC focus)
+* How DMRS is placed in the grid
+* UL vs DL grid difference
+* Exact mapping flow (MAC → PHY → RF)
+
+Just tell me 👍

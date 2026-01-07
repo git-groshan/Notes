@@ -25,18 +25,64 @@ Ways to create threads in C++11
 4. Member Functions
 5. Static Member Functions 
 
-// Requirement 
-// find the addition of all odd number from 1 to 190000000 and all even number from 1 to 190000000
+Requirement 
+find the addition of all odd number from 1 to 190000000 and all even number from 1 to 190000000
 */
 #include <iostream>
 #include <thread>
+#include <chrono>
+#include <algorithm>
+using namespace std;// for cout and endl
+using namespace std::chrono; // for high_resolution_clock
 
 void printHello() {
     std::cout << "Hello from thread!" << std::endl;
 }
+typedef unsigned long long ull;
+ull oddSum = 0;
+ull evenSum = 0;
+//++ standard library.
+void calculateOddSum(ull start, ull end) {
+    for (ull i = start; i <= end; i++) {
+        if (i % 2 != 0) {
+            oddSum += i;
+        }
+    }
+}
+void calculateEvenSum(ull start, ull end) {
+    for (ull i = start; i <= end; i++) {
+        if (i % 2 == 0) {
+            evenSum += i;
+        }
+    }
+}
 
 int main() {
-    std::thread t(printHello);
-    t.join();
+    //Single Threaded Execution
+    ull start = 1;
+    ull end = 190000000;
+    auto startTime = std::chrono::high_resolution_clock::now();
+    calculateEvenSum(start, end);
+    calculateOddSum(start, end);
+    auto endTime = std::chrono::high_resolution_clock::now();
+    auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+    std::cout << "Single Threaded Execution Time: " << duration << " milliseconds" << std::endl;
+    std::cout << "Even Sum: " << evenSum << std::endl;
+    std::cout << "Odd Sum: " << oddSum << std::endl;
+    // std::thread t(printHello);
+    // t.join();
+    //Multi Threaded Execution
+    oddSum = 0; 
+    evenSum = 0;
+    startTime = std::chrono::high_resolution_clock::now();      
+    std::thread evenThread(calculateEvenSum, start, end);
+    std::thread oddThread(calculateOddSum, start, end);
+    evenThread.join();
+    oddThread.join();
+    endTime = std::chrono::high_resolution_clock::now();
+    duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+    std::cout << "Multi Threaded Execution Time: " << duration << " milliseconds" << std::endl;
+    std::cout << "Even Sum: " << evenSum << std::endl;
+    std::cout << "Odd Sum: " << oddSum << std::endl;
     return 0;
 }

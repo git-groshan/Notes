@@ -1,0 +1,232 @@
+Below is a **clean, end-to-end explanation of Downlink (DL) and Uplink (UL) data flow in 5G NR**, exactly how it happens **layer by layer** (core → RAN → UE and back).
+This is **interview-ready** and also useful for **L2/MAC debugging**.
+
+---
+
+# 📥 Downlink (DL) Data Flow — Network ➜ UE
+
+## 1️⃣ Core Network → gNB (CU-UP)
+
+* User data comes from **5G Core (UPF)** via **N3 interface**
+* Protocol used: **GTP-U**
+* Data reaches **gNB CU-UP**
+
+```
+UPF → (GTP-U) → gNB CU-UP
+```
+
+---
+
+## 2️⃣ SDAP (Service Mapping)
+
+* Maps **QoS Flow ID (QFI)** → **Data Radio Bearer (DRB)**
+* Ensures QoS (latency, priority)
+
+👉 Mainly active in **5G (not LTE)**
+
+---
+
+## 3️⃣ PDCP (L2)
+
+Functions:
+
+* Header compression (ROHC)
+* Ciphering (encryption)
+* Integrity (for control)
+* PDCP SN added
+
+Output: **PDCP PDU**
+
+---
+
+## 4️⃣ RLC (L2)
+
+Modes:
+
+* **AM** (acknowledged)
+* **UM**
+* **TM**
+
+Functions:
+
+* Segmentation / reassembly
+* Retransmission (if AM)
+* In-order delivery
+
+Output: **RLC PDU**
+
+---
+
+## 5️⃣ MAC (L2) — ⚠️ Key Layer
+
+Functions:
+
+* Scheduling decision (RBs, slots)
+* HARQ process handling
+* Logical channel multiplexing
+* Priority handling
+
+MAC creates:
+
+* **Transport Block (TB)**
+* Adds MAC header + HARQ ID
+
+---
+
+## 6️⃣ PHY (L1)
+
+Functions:
+
+* Channel coding (LDPC / Polar)
+* Modulation (QPSK, 16QAM, 64QAM, 256QAM)
+* Resource mapping to **time–frequency grid**
+* Beamforming
+
+Transmission channel:
+
+* **PDSCH (Physical Downlink Shared Channel)**
+
+---
+
+## 7️⃣ UE Reception
+
+* UE demodulates → decodes
+* HARQ feedback sent:
+
+  * **ACK** (success)
+  * **NACK** (retransmission)
+
+---
+
+### ✅ DL Flow Summary
+
+```
+UPF → SDAP → PDCP → RLC → MAC → PHY → PDSCH → UE
+```
+
+---
+
+# 📤 Uplink (UL) Data Flow — UE ➜ Network
+
+## 1️⃣ UE Data Generation
+
+* App generates data
+* Data enters protocol stack
+
+---
+
+## 2️⃣ PDCP (UE Side)
+
+* Ciphering
+* PDCP SN added
+* QoS flow handling
+
+---
+
+## 3️⃣ RLC
+
+* Segmentation
+* Buffering
+* AM retransmissions (if enabled)
+
+---
+
+## 4️⃣ MAC (UE Side)
+
+⚠️ UL needs **permission (grant)**
+
+MAC tasks:
+
+* Buffer Status Report (**BSR**)
+* Scheduling Request (**SR**)
+* HARQ process selection
+
+---
+
+## 5️⃣ UL Scheduling (gNB)
+
+* UE sends **SR**
+* gNB sends **UL Grant** via **PDCCH**
+* Grant defines:
+
+  * RBs
+  * Slot
+  * MCS
+  * HARQ process
+
+---
+
+## 6️⃣ PHY Transmission
+
+* UE transmits data on:
+
+  * **PUSCH**
+* DMRS used for channel estimation
+
+---
+
+## 7️⃣ gNB Reception
+
+* Decode UL data
+* Send HARQ:
+
+  * **ACK** → success
+  * **NACK** → retransmission
+
+---
+
+### ✅ UL Flow Summary
+
+```
+UE → PDCP → RLC → MAC → PHY → PUSCH → gNB → UPF
+```
+
+---
+
+# 🔄 DL vs UL (Quick Comparison)
+
+| Aspect          | Downlink | Uplink   |
+| --------------- | -------- | -------- |
+| Who schedules   | gNB      | gNB      |
+| Main channel    | PDSCH    | PUSCH    |
+| Control channel | PDCCH    | PDCCH    |
+| HARQ feedback   | UE → gNB | gNB → UE |
+| Grant needed    | ❌        | ✅        |
+
+---
+
+# ⏱️ Where HARQ Fits
+
+* MAC assigns **HARQ process ID**
+* PHY decodes
+* Feedback sent after **k1 slots**
+* Retransmission scheduled if NACK
+
+---
+
+# 🧠 Interview One-Liners
+
+* **Downlink**: Data flows from core → gNB → UE via PDSCH
+* **Uplink**: UE needs UL grant before transmitting on PUSCH
+* **MAC** controls scheduling and HARQ
+* **PHY** maps data onto time–frequency grid
+
+---
+
+# 🧩 Simple Analogy
+
+📦 **Courier System**
+
+* DL: Warehouse → Delivery boy → Customer
+* UL: Customer requests pickup → approval → pickup
+
+---
+
+If you want next:
+
+* DL vs UL call flow diagram (stepwise)
+* Control plane vs user plane
+* MAC scheduler deep dive
+* Where latency is added in DL/UL
+
+Just tell me 👍
