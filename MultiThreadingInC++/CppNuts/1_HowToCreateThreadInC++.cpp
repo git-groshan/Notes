@@ -1,3 +1,9 @@
+/*
+Process : A process is an independent program in execution. It has its own memory space, code, data, and system resources.
+Thread : A thread is a lightweight process that can run concurrently with other threads within the same program.
+Also, Thread is a smaller unit of process sharing memory with other threads of the same process.
+
+*/
 // Topic: Introduction to Multi-threading in C++(C++11 and above)
 // Subtopic: How to Create a Thread in C++
 /*
@@ -28,6 +34,10 @@ Ways to create threads in C++11
 Requirement 
 find the addition of all odd number from 1 to 190000000 and all even number from 1 to 190000000
 */
+
+// A process is divided into multiple sub-processes called threads. Threads are also called lightweight processes.
+// Each thread has its own stack, program counter, and registers but shares the same memory space with other threads in the same process.   
+
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -75,10 +85,11 @@ int main() {
     oddSum = 0; 
     evenSum = 0;
     startTime = std::chrono::high_resolution_clock::now();      
+    //creating two threads using function pointers
     std::thread evenThread(calculateEvenSum, start, end);
     std::thread oddThread(calculateOddSum, start, end);
-    evenThread.join();
-    oddThread.join();
+    evenThread.join();// wait for evenThread(process) to finish
+    oddThread.join();// wait for oddThread to finish
     endTime = std::chrono::high_resolution_clock::now();
     duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
     std::cout << "Multi Threaded Execution Time: " << duration << " milliseconds" << std::endl;
